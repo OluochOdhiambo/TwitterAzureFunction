@@ -15,19 +15,6 @@ using Newtonsoft.Json.Linq;
 
 namespace TwitterAzureFunction
 {
-    public class TweetData
-    {
-        public string TweetText { get; set; }
-
-        public int Retweets { get; set; }
-
-        public int Favorites { get; set; }
-
-        public string userId { get; set; }
-
-        public string createdAt { get; set; }
-    }
-
     public static class TwitterFunction
     {
         [FunctionName("TwitterFunction")]
