@@ -1,9 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Azure.Storage.Blobs;
+using System.IO;
+using System.Reflection.Metadata;
 
 namespace TwitterAzureFunction
 {
@@ -28,7 +30,7 @@ namespace TwitterAzureFunction
         private readonly TwitterApiRequest twitterApiRequest = new TwitterApiRequest();
 
         [FunctionName("TwitterTimerTrigger")]
-        public async Task RunAsync([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer, ILogger log, ExecutionContext context)
+        public async Task RunAsync([TimerTrigger("0 * * * *")] TimerInfo myTimer, ILogger log, ExecutionContext context)
         {
             IConfiguration config = new ConfigurationBuilder()
                  .SetBasePath(context.FunctionAppDirectory)
@@ -37,14 +39,21 @@ namespace TwitterAzureFunction
                  .Build();
 
             string apiKey = config["ApiKey"];
+            string blobStorageConnectionString = config["AzureBlobStorageConnectionString"];
+            string blobStorageContainerName = config["AzureBlobStorageContainerName"];
             string count = "3";
+
+            var blobContainerClient = new BlobContainerClient(blobStorageConnectionString, blobStorageContainerName);
 
             foreach (var user in newsSources)
             {
                 var tweets = await twitterApiRequest.GetTweets(user.UserId, count, apiKey, log);
                 log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}. Username: {user.Username}");
-                log.LogInformation($"Tweets: {tweets}");
 
+                BlobClient tweetBlobClient = blobContainerClient.GetBlobClient($"{user.Username}/{DateTime.Now.ToString("yyyyMMddTHHmmssZ")}");
+
+                // Prepare data for upload to blob storage
+                await tweetBlobClient.UploadAsync(BinaryData.FromString(tweets), overwrite: true);
 
                 // Implement a 20-second delay
                 await Task.Delay(20000);

@@ -115,7 +115,6 @@ namespace TwitterAzureFunction
                                         .Select(entry => (dynamic)entry)
                                         .Take(int.Parse(count) - 1);
 
-                                    log.LogInformation($"UserID: {otherTweetResults}.");
 
                                     IEnumerable<dynamic> allTweets = otherTweetResults.Concat(new dynamic[] { lastTweetResult });
 
@@ -163,13 +162,11 @@ namespace TwitterAzureFunction
                                 if (int.Parse(count) > 1)
 
                                 {
-                                    log.LogInformation($"Checking all tweets. {tweetTimeline.instructions[instructionsCount - 1].entries}");
 
                                     IEnumerable<dynamic> allTweets = ((JArray)tweetTimeline.instructions[instructionsCount - 1].entries)
                                         .Select(entry => (dynamic)entry)
                                         .Take(int.Parse(count));
 
-                                    log.LogInformation($"UserID: {allTweets}.");
 
                                     // Create a list of Tweets
                                     List<TweetData> tweetList = allTweets.Select(t => new TweetData
