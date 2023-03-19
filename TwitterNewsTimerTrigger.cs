@@ -4,8 +4,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Azure.Storage.Blobs;
-using System.IO;
-using System.Reflection.Metadata;
 
 namespace TwitterAzureFunction
 {
@@ -30,7 +28,7 @@ namespace TwitterAzureFunction
         private readonly TwitterApiRequest twitterApiRequest = new TwitterApiRequest();
 
         [FunctionName("TwitterTimerTrigger")]
-        public async Task RunAsync([TimerTrigger("0 * * * *")] TimerInfo myTimer, ILogger log, ExecutionContext context)
+        public async Task RunAsync([TimerTrigger("*/30 * * * *")] TimerInfo myTimer, ILogger log, ExecutionContext context)
         {
             IConfiguration config = new ConfigurationBuilder()
                  .SetBasePath(context.FunctionAppDirectory)

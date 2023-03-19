@@ -7,12 +7,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace TwitterAzureFunction
 {
+    public class BlobDetail
+    {
+        public string BlobUser { get; set; }
+
+        public string Blob { get; set; }
+    }
+
     public class FetchBlobs
     {
         public static async Task DownloadToText(BlobClient blobClient)
@@ -48,7 +54,6 @@ namespace TwitterAzureFunction
                     {
                         // log.LogInformation(JsonConvert.SerializeObject(blobhierarchyItem));
                         // Write out the name of the blob.
-                        Console.WriteLine("Blob name: {0}", blobhierarchyItem.Blob.Name);
                         BlobDetail blob = new BlobDetail
                         {
                             BlobUser = blobhierarchyItem.Blob.Name.Split('/')[0],

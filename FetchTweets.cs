@@ -11,13 +11,6 @@ using System.Collections.Generic;
 
 namespace TwitterAzureFunction
 {
-    public class BlobDetail
-    {
-        public string BlobUser { get; set; }
-
-        public string Blob { get; set; }
-    }
-
     public static class FetchTweets
     {
         [FunctionName("FetchTweets")]

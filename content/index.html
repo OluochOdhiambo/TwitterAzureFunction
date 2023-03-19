@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Azure SignalR Serverless Sample</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+    <h1 class="display-4 text-center">Latest News</h1>
+    <div class="container">
+        <table id="mylatestNews" class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"></th>
+                    <th scope="col">UserId</th>
+                    <th scope="col">Tweet</th>
+                    <th scope="col">Retweets</th>
+                    <th scope="col">Favorites</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+    <script>
+        const apiBaseUrl = window.location.origin;
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl(apiBaseUrl + '/api')
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+        connection.on("newMessage", function (message) {
+            // Parse the JSON string to an array of TweetData objects
+            const tweets = JSON.parse(message);
+
+            // Clear the existing table rows
+            const tableBody = document.querySelector("#mylatestNews tbody");
+            tableBody.innerHTML = "";
+
+            // Loop through the tweets and add a new row for each one
+            tweets.forEach(function (tweet, index) {
+                const row = document.createElement("tr");
+                const th = document.createElement("th");
+                th.setAttribute("scope", "row");
+                th.textContent = index + 1;
+                row.appendChild(th);
+                row.appendChild(document.createElement("td"));
+                const tdUserId = document.createElement("td");
+                tdUserId.textContent = tweet.userId;
+                row.appendChild(tdUserId);
+
+                const tdText = document.createElement("td");
+                tdText.textContent = tweet.TweetText;
+                row.appendChild(tdText);
+                tableBody.appendChild(row);
+
+                const tdRetweets = document.createElement("td");
+                tdRetweets.textContent = tweet.Retweets;
+                row.appendChild(tdRetweets);
+                tableBody.appendChild(row);
+
+                const tdFavorites = document.createElement("td");
+                tdFavorites.textContent = tweet.Favorites;
+                row.appendChild(tdFavorites);
+                tableBody.appendChild(row);
+            });
+        });
+
+
+        connection.start()
+            .catch(console.error);
+    </script>
+</body>
+
+</html>
