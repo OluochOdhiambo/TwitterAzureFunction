@@ -1,6 +1,6 @@
 # Azure Function Repo: Twitter API Query
-## Scenario
-As a developer working on social media analysis, I created an Azure function that allows users to query the Twitter API using RapidAPI and retrieve the latest tweets of a specific user. The function is built in C# and deployed on Azure Functions.
+## About
+Working on social media analysis, I created an Azure function that allows users to query the Twitter API using RapidAPI and retrieve the latest tweets of a specific user. The function is built in C# and deployed on Azure Functions.
 
 ## Technical Requirements
 The function is HTTP-triggered, meaning that users can send HTTP requests to the function's endpoint and receive a response containing the specified user's latest tweets. The function authenticates the user's request with Twitter API keys, fetches the latest tweets of the user, and returns them in JSON format. The function is built using the following technologies and tools:
